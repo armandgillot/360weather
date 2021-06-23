@@ -256,7 +256,7 @@ export default {
   data: function () {
     return {
       weather: [],
-      apiKey: "",
+      apiKey: "9da6b63f214e77766e16f592bdb466ed",
       city: "",
       weatherData1: [],
       weatherData2: [],
