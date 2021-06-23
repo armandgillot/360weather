@@ -1,42 +1,337 @@
 <template>
-  <div class="hello">
+  <div class="HelloWorld">
     <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+
+    <div class="">
+      <p>Prévision météo sur 5 jours</p>
+
+      <div class="input-group mb-3 formulaire d-flex justify-content-center">
+        <input
+          type="text"
+          class="form-control-lg"
+          placeholder="Choisir une ville"
+          aria-label="Choisir une ville"
+          aria-describedby="button-addon2"
+          v-model="city"
+        />
+        <button
+          class="btn btn-outline-secondary"
+          type="button"
+          id="button-addon2"
+          @click="loadWeather()"
+        >
+          Valider
+        </button>
+      </div>
+    </div>
+
+    <div
+      class="row mt-4 d-flex justify-content-center g-0"
+      v-if="weather.length > 1"
+    >
+      <div class="col-md-6">
+        <div class="accordion" id="accordionExample">
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingOne">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseOne"
+                aria-expanded="false"
+                aria-controls="collapseOne"
+              >
+                {{ displayDay1 }}
+              </button>
+            </h2>
+            <div
+              id="collapseOne"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingOne"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <div class="list-group">
+                  <div
+                    class="list-group-item list-group-item-action"
+                    aria-current="true"
+                    v-for="(weatherData1, idx) in weatherData1"
+                    v-bind:key="idx"
+                  >
+                    <div class="d-flex w-100 justify-content-between">
+                      <img alt="" :src="weatherData1.weather[0].icon" />
+                      <h5 class="mb-1">
+                        {{ weatherData1.weather[0].description }}
+                      </h5>
+                      <small>{{ weatherData1.dt }}</small>
+                    </div>
+                    <p class="mb-1">Max {{ weatherData1.main.temp_max }}</p>
+                    <small>Min : {{ weatherData1.main.temp_min }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingTwo">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseTwo"
+                aria-expanded="false"
+                aria-controls="collapseTwo"
+              >
+                {{ displayDay2 }}
+              </button>
+            </h2>
+            <div
+              id="collapseTwo"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingTwo"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <div class="list-group">
+                  <div
+                    class="list-group-item list-group-item-action"
+                    aria-current="true"
+                    v-for="(weatherData2, idx) in weatherData2"
+                    v-bind:key="idx"
+                  >
+                    <div class="d-flex w-100 justify-content-between">
+                      <img alt="" :src="weatherData2.weather[0].icon" />
+                      <h5 class="mb-1">
+                        {{ weatherData2.weather[0].description }}
+                      </h5>
+                      <small>{{ weatherData2.dt }}</small>
+                    </div>
+                    <p class="mb-1">Max {{ weatherData2.main.temp_max }}</p>
+                    <small>Min : {{ weatherData2.main.temp_min }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingThree">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseThree"
+                aria-expanded="false"
+                aria-controls="collapseThree"
+              >
+                {{ displayDay3 }}
+              </button>
+            </h2>
+            <div
+              id="collapseThree"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingThree"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <div class="list-group">
+                  <div
+                    class="list-group-item list-group-item-action"
+                    aria-current="true"
+                    v-for="(weatherData3, idx) in weatherData3"
+                    v-bind:key="idx"
+                  >
+                    <div class="d-flex w-100 justify-content-between">
+                      <img alt="" :src="weatherData3.weather[0].icon" />
+                      <h5 class="mb-1">
+                        {{ weatherData3.weather[0].description }}
+                      </h5>
+                      <small>{{ weatherData3.dt }}</small>
+                    </div>
+                    <p class="mb-1">Max {{ weatherData3.main.temp_max }}</p>
+                    <small>Min : {{ weatherData3.main.temp_min }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFour">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseFour"
+                aria-expanded="false"
+                aria-controls="collapseFour"
+              >
+                {{ displayDay4 }}
+              </button>
+            </h2>
+            <div
+              id="collapseFour"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingFour"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <div class="list-group">
+                  <div
+                    class="list-group-item list-group-item-action"
+                    aria-current="true"
+                    v-for="(weatherData4, idx) in weatherData4"
+                    v-bind:key="idx"
+                  >
+                    <div class="d-flex w-100 justify-content-between">
+                      <img alt="" :src="weatherData4.weather[0].icon" />
+                      <h5 class="mb-1">
+                        {{ weatherData4.weather[0].description }}
+                      </h5>
+                      <small>{{ weatherData4.dt }}</small>
+                    </div>
+                    <p class="mb-1">Max {{ weatherData4.main.temp_max }}</p>
+                    <small>Min : {{ weatherData4.main.temp_min }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingFive">
+              <button
+                class="accordion-button collapsed"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#collapseFive"
+                aria-expanded="false"
+                aria-controls="collapseFive"
+              >
+                {{ displayDay5 }}
+              </button>
+            </h2>
+            <div
+              id="collapseFive"
+              class="accordion-collapse collapse"
+              aria-labelledby="headingFive"
+              data-bs-parent="#accordionExample"
+            >
+              <div class="accordion-body">
+                <div class="list-group">
+                  <div
+                    class="list-group-item list-group-item-action"
+                    aria-current="true"
+                    v-for="(weatherData5, idx) in weatherData5"
+                    v-bind:key="idx"
+                  >
+                    <div class="d-flex w-100 justify-content-between">
+                      <h5 class="mb-1">
+                        <img alt="" :src="weatherData5.weather[0].icon" />
+                        {{ weatherData5.weather[0].description }}
+                      </h5>
+                      <small>{{ weatherData5.dt }}</small>
+                    </div>
+                    <p class="mb-1">Max {{ weatherData5.main.temp_max }}</p>
+                    <small>Min : {{ weatherData5.main.temp_min }}</small>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
+import moment from "moment";
+import "moment/locale/fr";
+moment.locale("fr");
+
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
   props: {
-    msg: String
-  }
-}
+    msg: String,
+  },
+  data: function () {
+    return {
+      weather: [],
+      apiKey: "9da6b63f214e77766e16f592bdb466ed",
+      city: "",
+      weatherData1: [],
+      weatherData2: [],
+      weatherData3: [],
+      weatherData4: [],
+      weatherData5: [],
+      displayDay1: "",
+      displayDay2: "",
+      displayDay3: "",
+      displayDay4: "",
+      displayDay5: "",
+    };
+  },
+  methods: {
+    loadWeather() {
+      axios
+        .get(
+          `http://api.openweathermap.org/data/2.5/forecast?q=${this.city}&lang=fr&units=metric&appid=${this.apiKey}`
+        )
+        .then(
+          function (response) {
+            this.weather = response.data.list;
+
+            for (let i = 0; i < this.weather.length; i++) {
+              this.weather[i].dt = moment(this.weather[i].dt_txt).format("LT");
+              this.weather[
+                i
+              ].weather[0].icon = `http://openweathermap.org/img/w/${this.weather[i].weather[0].icon}.png`;
+            }
+
+            this.weatherData1 = this.weather.filter(
+              (i) => moment(i.dt_txt).dayOfYear() == moment().dayOfYear()
+            );
+            this.weatherData2 = this.weather.filter(
+              (i) => moment(i.dt_txt).dayOfYear() == moment().dayOfYear() + 1
+            );
+            this.weatherData3 = this.weather.filter(
+              (i) => moment(i.dt_txt).dayOfYear() == moment().dayOfYear() + 2
+            );
+            this.weatherData4 = this.weather.filter(
+              (i) => moment(i.dt_txt).dayOfYear() == moment().dayOfYear() + 3
+            );
+            this.weatherData5 = this.weather.filter(
+              (i) => moment(i.dt_txt).dayOfYear() == moment().dayOfYear() + 4
+            );
+            // console.log(this.weather);
+            if (this.weatherData1.length > 0) {
+              this.displayDay1 = moment(this.weatherData1[0].dt_txt).format(
+                "dddd"
+              );
+            } else {
+              this.displayDay1 =
+                "Aujourd'hui : Plus de données météo pour aujourdui, il est trop tard, réessayez après minuit ou voir les jours suivants ci dessous";
+            }
+            this.displayDay2 = moment(this.weatherData2[0].dt_txt).format(
+              "dddd"
+            );
+            this.displayDay3 = moment(this.weatherData3[0].dt_txt).format(
+              "dddd"
+            );
+            this.displayDay4 = moment(this.weatherData4[0].dt_txt).format(
+              "dddd"
+            );
+            // if (this.weatherData5.length > 0) {
+            this.displayDay5 = moment(this.weatherData5[0].dt_txt).format(
+              "dddd"
+            );
+            // } else {
+            //   this.displayDay5 = "données météo encore indispos pour ce jour..";
+            // }
+          }.bind(this)
+        );
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -54,5 +349,10 @@ li {
 }
 a {
   color: #42b983;
+}
+.formulaire {
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
 }
 </style>
