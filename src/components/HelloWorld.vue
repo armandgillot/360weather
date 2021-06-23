@@ -256,7 +256,7 @@ export default {
   data: function () {
     return {
       weather: [],
-      apiKey: "9da6b63f214e77766e16f592bdb466ed",
+      apiKey: "",
       city: "",
       weatherData1: [],
       weatherData2: [],
@@ -274,7 +274,7 @@ export default {
     loadWeather() {
       axios
         .get(
-          `http://api.openweathermap.org/data/2.5/forecast?q=${this.city}&lang=fr&units=metric&appid=${this.apiKey}`
+          `https://api.openweathermap.org/data/2.5/forecast?q=${this.city}&lang=fr&units=metric&appid=${this.apiKey}`
         )
         .then(
           function (response) {
@@ -284,7 +284,7 @@ export default {
               this.weather[i].dt = moment(this.weather[i].dt_txt).format("LT");
               this.weather[
                 i
-              ].weather[0].icon = `http://openweathermap.org/img/w/${this.weather[i].weather[0].icon}.png`;
+              ].weather[0].icon = `https://openweathermap.org/img/w/${this.weather[i].weather[0].icon}.png`;
             }
 
             this.weatherData1 = this.weather.filter(
