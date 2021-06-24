@@ -29,7 +29,8 @@
       class="row mt-4 d-flex justify-content-center g-0"
       v-if="weather.length > 1"
     >
-      <div class="col-md-6">
+      <div class="col-md-6 ">
+
         <div class="accordion" id="accordionExample">
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingOne">
@@ -60,13 +61,13 @@
                   >
                     <div class="d-flex w-100 justify-content-between">
                       <img alt="" :src="weatherData1.weather[0].icon" />
-                      <h5 class="mb-1">
+                      <h5 class="mb-1 description">
                         {{ weatherData1.weather[0].description }}
                       </h5>
                       <small>{{ weatherData1.dt }}</small>
                     </div>
-                    <p class="mb-1">Max {{ weatherData1.main.temp_max }}</p>
-                    <small>Min : {{ weatherData1.main.temp_min }}</small>
+                    <p class="mb-1">Température : {{ weatherData1.main.temp }}°C</p>
+                    <small>Humidité : {{ weatherData1.main.humidity }}%</small>
                   </div>
                 </div>
               </div>
@@ -101,13 +102,13 @@
                   >
                     <div class="d-flex w-100 justify-content-between">
                       <img alt="" :src="weatherData2.weather[0].icon" />
-                      <h5 class="mb-1">
+                      <h5 class="mb-1 description">
                         {{ weatherData2.weather[0].description }}
                       </h5>
                       <small>{{ weatherData2.dt }}</small>
                     </div>
-                    <p class="mb-1">Max {{ weatherData2.main.temp_max }}</p>
-                    <small>Min : {{ weatherData2.main.temp_min }}</small>
+                    <p class="mb-1">Température : {{ weatherData2.main.temp }}°C</p>
+                    <small>Humidité : {{ weatherData2.main.humidity }}%</small>
                   </div>
                 </div>
               </div>
@@ -142,13 +143,13 @@
                   >
                     <div class="d-flex w-100 justify-content-between">
                       <img alt="" :src="weatherData3.weather[0].icon" />
-                      <h5 class="mb-1">
+                      <h5 class="mb-1 description">
                         {{ weatherData3.weather[0].description }}
                       </h5>
                       <small>{{ weatherData3.dt }}</small>
                     </div>
-                    <p class="mb-1">Max {{ weatherData3.main.temp_max }}</p>
-                    <small>Min : {{ weatherData3.main.temp_min }}</small>
+                    <p class="mb-1">Température : {{ weatherData3.main.temp }}°C</p>
+                    <small>Humidité : {{ weatherData3.main.humidity }}%</small>
                   </div>
                 </div>
               </div>
@@ -183,13 +184,13 @@
                   >
                     <div class="d-flex w-100 justify-content-between">
                       <img alt="" :src="weatherData4.weather[0].icon" />
-                      <h5 class="mb-1">
+                      <h5 class="mb-1 description">
                         {{ weatherData4.weather[0].description }}
                       </h5>
                       <small>{{ weatherData4.dt }}</small>
                     </div>
-                    <p class="mb-1">Max {{ weatherData4.main.temp_max }}</p>
-                    <small>Min : {{ weatherData4.main.temp_min }}</small>
+                    <p class="mb-1">Température : {{ weatherData4.main.temp }}°C</p>
+                    <small>Humidité : {{ weatherData4.main.humidity }}%</small>
                   </div>
                 </div>
               </div>
@@ -223,14 +224,14 @@
                     v-bind:key="idx"
                   >
                     <div class="d-flex w-100 justify-content-between">
-                      <h5 class="mb-1">
                         <img alt="" :src="weatherData5.weather[0].icon" />
+                      <h5 class="mb-1 description">
                         {{ weatherData5.weather[0].description }}
                       </h5>
                       <small>{{ weatherData5.dt }}</small>
                     </div>
-                    <p class="mb-1">Max {{ weatherData5.main.temp_max }}</p>
-                    <small>Min : {{ weatherData5.main.temp_min }}</small>
+                    <p class="mb-1">Température : {{ weatherData5.main.temp }}°C</p>
+                    <small>Humidité : {{ weatherData5.main.humidity }}%</small>
                   </div>
                 </div>
               </div>
@@ -271,14 +272,19 @@ export default {
     };
   },
   methods: {
+     cleanUpSpecialChars(str) {
+      str = str.replace(/é|è|ê/g, "e");
+      return str;
+    },
     loadWeather() {
       axios
         .get(
-          `https://api.openweathermap.org/data/2.5/forecast?q=${this.city}&lang=fr&units=metric&appid=${this.apiKey}`
+          `https://api.openweathermap.org/data/2.5/forecast?q=${this.cleanUpSpecialChars(this.city)}&lang=fr&units=metric&appid=${this.apiKey}`
         )
         .then(
           function (response) {
             this.weather = response.data.list;
+            this.city = response.data.city.name
 
             for (let i = 0; i < this.weather.length; i++) {
               this.weather[i].dt = moment(this.weather[i].dt_txt).format("LT");
@@ -330,6 +336,7 @@ export default {
           }.bind(this)
         );
     },
+    
   },
 };
 </script>
@@ -350,9 +357,7 @@ li {
 a {
   color: #42b983;
 }
-.formulaire {
-  margin-left: auto;
-  margin-right: auto;
-  width: 90%;
+.description::first-letter {
+  text-transform: uppercase;
 }
 </style>
